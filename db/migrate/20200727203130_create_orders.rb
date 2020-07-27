@@ -3,6 +3,7 @@ class CreateOrders < ActiveRecord::Migration[6.0]
     create_table :orders do |t|
       t.string :seller
       t.string :buyer
+      t.integer :item_id
       t.string :order_type #Shipment vs Local
       t.boolean :shipping?
       t.string :shipping_address

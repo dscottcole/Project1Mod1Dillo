@@ -14,8 +14,8 @@ ActiveRecord::Schema.define(version: 2020_07_27_203130) do
 
   create_table "items", force: :cascade do |t|
     t.string "item_name"
-    t.string "user_id"
-    t.string "order_id"
+    t.integer "user_id"
+    t.integer "order_id"
     t.string "location"
     t.string "category"
     t.string "condition"
@@ -26,6 +26,7 @@ ActiveRecord::Schema.define(version: 2020_07_27_203130) do
   create_table "orders", force: :cascade do |t|
     t.string "seller"
     t.string "buyer"
+    t.integer "item_id"
     t.string "order_type"
     t.boolean "shipping?"
     t.string "shipping_address"
