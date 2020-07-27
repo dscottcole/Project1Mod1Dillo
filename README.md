@@ -1,1 +1,3 @@
-# Project1Mod1Dillo
+# Armadillo Trading Place
+
+## Models & Relationships
