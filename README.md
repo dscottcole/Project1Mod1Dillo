@@ -28,4 +28,35 @@ _______________________________________________
 * Shippable items would have cart capabilities
 
 ### Stretch Goals
-*
+* TTY Prompts
+* Colorize
+
+
+
+
+_______________________________________________
+
+## Class Instance Variables
+
+### Items (belongs to user, belongs to orders)
+* item_name
+* location
+* category
+* condition
+* price
+* description
+* user_id
+* order_id
+
+
+### Users (has many items)
+* name
+
+
+### Orders (belongs to items)
+* seller
+* buyer
+* order_type
+* shipping?
+* shipping_address
+* meeting_location
