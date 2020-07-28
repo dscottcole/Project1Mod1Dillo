@@ -17,17 +17,16 @@ puts "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 end
 
 def interest 
-    puts "Would you like to list an item or browse the marketplace?(Type 'list' or 'browse')"
-    STDIN.gets.chomp
+    $prompt.select("Would you like to list an item or browse the marketplace?", %w(List Browse), required: true)
 end
 
 def list_browse
     decision = interest
-
-    if decision == "list"
-        puts "LIST ITEM"
+    if decision == "List"
+        $current_user.list
     else
-        show_marketplace
+        Item.generate_list
+        puts "WE ARE BROWSING, BABY"
     end
 end
 
@@ -69,5 +68,6 @@ end
 
 welcome
 login
+list_browse
 
 binding.pry

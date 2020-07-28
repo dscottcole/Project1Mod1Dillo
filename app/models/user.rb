@@ -7,44 +7,34 @@ class User < ActiveRecord::Base
     def get_listing
         $prompt.ask("What item would you like to list in the marketplace?", default: ENV["USER"])
     end
-
     def get_category
         $prompt.select("What category best describes your item?", %w(Active Gaming Clothing Furniture Computers Household Hardware Auto ))
-        
     end
-
     def get_condition
         $prompt.select("What is your item's condition?", %w(New Used_Like_New Used_Fair Used_Not_Great))
     end
-
     def get_price
         $prompt.ask("How much $ do you want for your item?", default: ENV["USER"])
     end
-
     def get_description
         $prompt.ask("Please provide a description for your item.", default: ENV["USER"])
     end
-
     def get_s_address 
         $prompt.ask("Please provide a shipping address.", required: true)
     end
-
     def get_m_address 
         $prompt.ask("Please provide a meeting address.", required: true)
     end
-
     def get_item
         Item.generate_list
         # $prompt.ask('What item would you like to purchase?', required: true)
         $prompt.ask("What item would you like to purchase? Available items: #{$available_items}", default: ENV["USER"])
         # $prompt.select("What item would you like to purchase?", %w($available_items))    # ----- Need to get list of items being sold to populate
     end
-
     def shipvlocal
         $prompt.select("What is your item's condition?", %w(Shipment Local))
     end
-    
- 
+     
     def list
         item = get_listing
         cat = get_category
