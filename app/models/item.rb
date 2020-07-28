@@ -4,11 +4,20 @@ class Item < ActiveRecord::Base
 
     $available_items = " "
 
+    # def self.generate_list
+    #     item_list = Item.all.where(order_id: nil)
+    #     array = item_list.map do |i|
+    #         i.item_name.gsub!(" ", "_")
+    #     end
+    #     $available_items = array.join(" ")
+    # end
+
     def self.generate_list
         item_list = Item.all.where(order_id: nil)
         array = item_list.map do |i|
-            i.item_name.gsub!(" ", "_")
+            i.item_name
         end
-        $available_items = array.join(" ")
+        $available_items = array
     end
+
 end

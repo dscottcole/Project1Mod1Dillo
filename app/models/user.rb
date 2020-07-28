@@ -24,17 +24,22 @@ class User < ActiveRecord::Base
     end
 
     def get_s_address 
-        $prompt.ask("Please provide a shipping address.", default: ENV["USER"])
+        $prompt.ask("Please provide a shipping address.", required: true)
     end
 
     def get_m_address 
-        $prompt.ask("Please provide a meeting address.", default: ENV["USER"])
+        $prompt.ask("Please provide a meeting address.", required: true)
     end
 
     def get_item
         Item.generate_list
-        # $prompt.ask("What item would you like to purchase?", default: ENV["USER"])
-        $prompt.select("What item would you like to purchase?", %w($available_items))
+        # $prompt.ask('What item would you like to purchase?', required: true)
+        $prompt.ask("What item would you like to purchase? Available items: #{$available_items}", default: ENV["USER"])
+        # $prompt.select("What item would you like to purchase?", %w($available_items))    # ----- Need to get list of items being sold to populate
+    end
+
+    def shipvlocal
+        $prompt.select("What is your item's condition?", %w(Shipment Local))
     end
     
  
@@ -50,18 +55,27 @@ class User < ActiveRecord::Base
     def purchase
         item_name = get_item
         item = Item.all.find_by(item_name: item_name)
+        if self.id == item.user_id
+            puts "You cannot purchase your own item."
+            self.purchase
+        end
+        if item.order_id != nil
+            puts "That item is no longer available for purchase."
+            self.purchase
+        end
+        
+        ship_vs_local = shipvlocal
 
-        if item.location == self.location
-            order_t = "Local"
+        if ship_vs_local == "Local"
             address = get_m_address
+            order_t = "Local"
             new_order = Order.create(seller: item.user_id, buyer: self.id, item_id:item.id, order_type: order_t, shipping?: false, shipping_address: nil, meeting_location: address)
-            binding.pry
-            item.order = new_order
+            Item.all.find_by(id: item.id).update(order_id: new_order.id)
         else
-            order_t = "Shipment"
             address = get_s_address
+            order_t = "Shipment"
             new_order = Order.create(seller: item.user_id, buyer: self.id, item_id:item.id, order_type: order_t, shipping?: true, shipping_address: address, meeting_location: nil)
-            item.order = new_order
+            Item.all.find_by(id: item.id).update(order_id: new_order.id)
         end
     end
 end
