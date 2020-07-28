@@ -2,6 +2,8 @@ class User < ActiveRecord::Base
     has_many :items
     has_many :orders, through: :items
 
+    $cred_hash = {}
+
     def get_listing
         $prompt.ask("What item would you like to list in the marketplace?", default: ENV["USER"])
     end
@@ -63,7 +65,7 @@ class User < ActiveRecord::Base
             puts "That item is no longer available for purchase."
             self.purchase
         end
-        
+
         ship_vs_local = shipvlocal
 
         if ship_vs_local == "Local"
@@ -78,4 +80,9 @@ class User < ActiveRecord::Base
             Item.all.find_by(id: item.id).update(order_id: new_order.id)
         end
     end
+
+    def self.credential_hash
+    $cred_hash =  User.all.map {|u| [u.username, u.username+u.password]}.to_h
+    end
+
 end

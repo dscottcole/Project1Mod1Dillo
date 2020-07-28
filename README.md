@@ -24,8 +24,8 @@ _______________________________________________
 ### MVP
 * User can log in
 * User will be able to browse Marketplace
-* Message between users if local pickup available
 * Shippable items would have cart capabilities
+* Message between users if local pickup available
 
 ### Stretch Goals
 * TTY Prompts
