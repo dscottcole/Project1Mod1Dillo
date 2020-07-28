@@ -1,7 +1,7 @@
-scott = User.create(name: "Scott Cole")
-ted = User.create(name: "Ted Neben")
-bobby = User.create(name: "Robert Tarantino")
-marshall = User.create(name: "Marshall Mathers")
+scott = User.create(name: "Scott Cole", location: "Houston")
+ted = User.create(name: "Ted Neben", location: "Houston")
+bobby = User.create(name: "Robert Tarantino", location: "Dallas")
+marshall = User.create(name: "Marshall Mathers", location: "Austin")
 # = User.create(name: "")
 
 bike = Item.create(item_name: "Santa Cruz Bronson", user_id: 1, location: "Houston", category: "Bicycles", condition: "New", price: 4000, description: "Super gnarly 2020 Bronson. Shreds anything!")
