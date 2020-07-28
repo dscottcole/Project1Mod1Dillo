@@ -5,14 +5,7 @@ scott = User.all[0]
 ted = User.all[1]
 bobby = User.all[2]
 marshall = User.all[3]
-
-# logo = 
-#                                  ,.-----__
-#                               ,:::://///,:::-.
-#                               /:''/////// ``:::`;/|/
-#                             /'   ||||||     :://'`\
-#                ,          .' ,   ||||||     `/(  e \     /               -===~__-'\__X_`````\_____/~`-._ `.                                 ~~        ~~       `~-
-# '`|     o
+$prompt = TTY::Prompt.new
 
 def welcome
 puts " "
@@ -36,7 +29,10 @@ def list_browse
         show_marketplace
     end
 end
-    
+
+def tty_test
+    $prompt.ask("What is your name?", default: ENV["USER"])
+end   
 
 def show_marketplace
     Item.all.each do |i|
@@ -50,9 +46,4 @@ def show_marketplace
     end
 end
 
-welcome
-list_browse
-
-
-
-# binding.pry
+binding.pry

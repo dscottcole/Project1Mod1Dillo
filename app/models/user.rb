@@ -3,46 +3,42 @@ class User < ActiveRecord::Base
     has_many :orders, through: :items
 
     def get_listing
-        puts "What item would you like to list in the marketplace?"
-        STDIN.gets.chomp
+        $prompt.ask("What item would you like to list in the marketplace?", default: ENV["USER"])
     end
 
     def get_category
-        puts "What category best describes your item?"
-        STDIN.gets.chomp
+        $prompt.select("What category best describes your item?", %w(Active Gaming Clothing Furniture Computers Household Hardware Auto ))
+        
     end
 
     def get_condition
-        puts "What condition is your item in?(New, Used Like New, Used Fair, Used Not Great)"
-        STDIN.gets.chomp
+        $prompt.select("What is your item's condition?", %w(New Used_Like_New Used_Fair Used_Not_Great))
     end
 
     def get_price
-        puts "How much $ do you want for your item?"
-        STDIN.gets.chomp
+        $prompt.ask("How much $ do you want for your item?", default: ENV["USER"])
     end
 
     def get_description
-        puts "Please provide a description for your item."
-        STDIN.gets.chomp
+        $prompt.ask("Please provide a description for your item.", default: ENV["USER"])
     end
 
     def get_s_address 
-        puts "Please provide a shipping address."
-        STDIN.gets.chomp
+        $prompt.ask("Please provide a shipping address.", default: ENV["USER"])
     end
 
     def get_m_address 
-        puts "Please provide a meeting address."
-        STDIN.gets.chomp
+        $prompt.ask("Please provide a meeting address.", default: ENV["USER"])
     end
 
     def get_item
-        puts "What item would you like to purchase?"
-        STDIN.gets.chomp
+        Item.generate_list
+        # $prompt.ask("What item would you like to purchase?", default: ENV["USER"])
+        $prompt.select("What item would you like to purchase?", %w($available_items))
     end
     
-    def list_item
+ 
+    def list
         item = get_listing
         cat = get_category
         cond = get_condition
@@ -52,18 +48,20 @@ class User < ActiveRecord::Base
     end
 
     def purchase
-
         item_name = get_item
         item = Item.all.find_by(item_name: item_name)
 
         if item.location == self.location
             order_t = "Local"
             address = get_m_address
-            Order.create(seller: item.user_id, buyer: self.id, item_id:item.id, order_type: order_t, shipping?: false, shipping_address: nil, meeting_location: address)
+            new_order = Order.create(seller: item.user_id, buyer: self.id, item_id:item.id, order_type: order_t, shipping?: false, shipping_address: nil, meeting_location: address)
+            binding.pry
+            item.order = new_order
         else
             order_t = "Shipment"
             address = get_s_address
-            Order.create(seller: item.user_id, buyer: self.id, item_id:item.id, order_type: order_t, shipping?: true, shipping_address: address, meeting_location: nil)
+            new_order = Order.create(seller: item.user_id, buyer: self.id, item_id:item.id, order_type: order_t, shipping?: true, shipping_address: address, meeting_location: nil)
+            item.order = new_order
         end
     end
 end
