@@ -1,5 +1,8 @@
 require "bundler/setup"
 require "sinatra/activerecord"
+require "tty-prompt"
+
+
 Bundler.require
 require_all 'app/models'
 
