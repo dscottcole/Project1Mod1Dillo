@@ -6,6 +6,7 @@ ted = User.all[1]
 bobby = User.all[2]
 marshall = User.all[3]
 $prompt = TTY::Prompt.new
+$current_user = nil
 
 def welcome
 puts " "
@@ -45,5 +46,28 @@ def show_marketplace
         puts "============================================================"
     end
 end
+
+def login
+    username = $prompt.ask("What is your username?", required: true)
+    password = $prompt.mask("What is your password?", required: true)
+    credentials = username + password
+    User.credential_hash
+    if $cred_hash.keys.include?(username) == false
+        puts "Username incorrect"
+        login
+    elsif $cred_hash.values.include?(credentials) == true
+        puts "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+        puts "Thanks for visiting the Armadillo Trading Post, #{username}"
+        puts "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+        $current_user = User.all.find_by(username: username)
+    else
+        puts "Username & password combination invalid."
+    end  
+end
+
+###########################################################################################################################
+
+welcome
+login
 
 binding.pry
