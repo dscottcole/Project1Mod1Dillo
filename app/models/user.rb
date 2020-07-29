@@ -27,9 +27,10 @@ class User < ActiveRecord::Base
     end
     def get_item
         Item.generate_list
+        # Item.generate_list_g
         # $prompt.ask('What item would you like to purchase?', required: true)
-        $prompt.ask("What item would you like to purchase? Available items: #{$available_items}", default: ENV["USER"])
-        # $prompt.select("What item would you like to purchase?", %w($available_items))    # ----- Need to get list of items being sold to populate
+        $prompt.ask("What item would you like to purchase? Available items: #{$available_items_array}", default: ENV["USER"])
+        # $prompt.select("What item would you like to purchase?", %w($available_items_g))    # ----- Need to get list of items being sold to populate
     end
     def shipvlocal
         $prompt.select("What is your item's condition?", %w(Shipment Local))
@@ -70,6 +71,7 @@ class User < ActiveRecord::Base
             Item.all.find_by(id: item.id).update(order_id: new_order.id)
         end
     end
+
 
     def self.credential_hash
     $cred_hash =  User.all.map {|u| [u.username, u.username+u.password]}.to_h
