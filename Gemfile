@@ -9,3 +9,4 @@ gem 'rake'
 gem 'database_cleaner'
 gem 'require_all'
 gem "tty-prompt"
+gem "colorize"

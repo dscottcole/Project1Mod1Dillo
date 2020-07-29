@@ -33,7 +33,7 @@ class User < ActiveRecord::Base
         # $prompt.select("What item would you like to purchase?", %w($available_items_g))    # ----- Need to get list of items being sold to populate
     end
     def shipvlocal
-        $prompt.select("What is your item's condition?", %w(Shipment Local))
+        $prompt.select("Would this item be shipped or will it be picked up locally?", %w(Shipment Local))
     end
      
     def list
