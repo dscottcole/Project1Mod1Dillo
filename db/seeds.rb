@@ -1,7 +1,7 @@
-scott = User.create(name: "Scott Cole", location: "Houston", username: "scotty", password: "123" )
-ted = User.create(name: "Ted Neben", location: "Houston", username: "teddy", password: "456")
-bobby = User.create(name: "Robert Tarantino", location: "Dallas", username: "logic", password: "789")
-marshall = User.create(name: "Marshall Mathers", location: "Austin", username: "eminem", password: "012")
+scott = User.create(name: "Scott Cole", location: "Houston", username: "scotty", password: "123", balance: 4000)
+ted = User.create(name: "Ted Neben", location: "Houston", username: "teddy", password: "456", balance: 2000)
+bobby = User.create(name: "Robert Tarantino", location: "Dallas", username: "logic", password: "789", balance: 263.37)
+marshall = User.create(name: "Marshall Mathers", location: "Austin", username: "eminem", password: "012", balance: 39.99)
 # = User.create(name: "")
 
 bike = Item.create(item_name: "Santa Cruz Bronson", user_id: 1, order_id: 1, location: "Houston", category: "Bicycles", condition: "New", price: 4000, description: "Super gnarly 2020 Bronson. Shreds anything!")

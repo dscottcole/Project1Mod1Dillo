@@ -143,22 +143,33 @@ def logvnew
     $prompt.select("Do you have an existing account?".cyan.bold, %w(Log_In Create_New_Account), required: true)
 end
 def login
+    attempts = 0
+    User.credential_hash
+    while attempts < 3 do
     username = $prompt.ask("What is your username?".cyan.bold, required: true)
     password = $prompt.mask("What is your password?".cyan.bold, required: true)
     credentials = username + password
-    User.credential_hash
-    if $cred_hash.keys.include?(username) == false
-        puts "Username incorrect".light_red.bold
-        login
-    elsif $cred_hash.values.include?(credentials) == true
-        puts "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++".red.bold
-        puts "Thanks for visiting the Armadillo Trading Post, #{username}!!".white.bold
-        puts "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++".blue.bold
-        $current_user = User.all.find_by(username: username)
-    else
-        puts "Username & password combination invalid.".red.bold
-    end  
+        if $cred_hash.keys.include?(username) == false
+            puts "Username incorrect".light_red.bold
+        elsif $cred_hash.values.include?(credentials) == true
+            puts "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++".red.bold
+            puts "Thanks for visiting the Armadillo Trading Post, #{username}!!".white.bold
+            puts "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++".blue.bold
+            $current_user = User.all.find_by(username: username)
+            attempts = 3
+        elsif $cred_hash.values.include?(credentials) == false
+            puts "Username & password combination invalid.".red.bold
+        end
+        attempts += 1
+        if attempts == 2
+            puts "This is your final attempt at logging in."
+        end
+        if attempts == 3 
+            puts "You have exceeded your login attempts. Happy trails!" 
+        end
+    end 
 end
+
 def new_user
     first_last = get_name
     loc = get_loc
