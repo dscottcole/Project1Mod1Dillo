@@ -8,6 +8,7 @@ bobby = User.all[2]
 marshall = User.all[3]
 $prompt = TTY::Prompt.new
 $current_user = nil
+
 def welcome
 puts " "
 puts " "
@@ -70,10 +71,11 @@ puts "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 puts "       <') ) ) ~       <') ) ) ~       <') ) ) ~       ~ ( ( ('>       ~ ( ( ('>       ~ ( ( ('>      ".white.bold
 puts "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++".blue.bold
 end
-def interest 
-    $prompt.select("Would you like to list an item or browse the marketplace?".cyan.bold, %w(List Browse), required: true)
+
+def interest
+    $prompt.select("Would you like to list an item, browse the marketplace, or make a purchase without browsing?".cyan.bold, %w(List Browse Purchase), required: true)
 end
-def buy_or_not
+def marketplace_navigation
     $prompt.select("Select from the following:".cyan.bold, %w(Purchase_Item Refresh_Marketplace List_Item Exit_Marketplace), required: true)
 end
 def get_name
@@ -91,17 +93,18 @@ end
 def get_pass2
     $prompt.mask("Please repeat your password.".cyan.bold, required: true)
 end
-def list_browse
+
+def list_browse_purchase
     decision = interest
     if decision == "List"
         $current_user.list
         puts "Best of luck!"
         list_browse
-    else
+    elsif decision == "Browse"
         puts " "
-        puts "WE ARE BROWSING, BABY".light_magenta.underline + " " "!".white.bold + " " + "!".white.bold + " " + "!".white.bold
+        puts "BOOM!! WE ARE BROWSING, BABY!".light_magenta.underline + " " "!".white.bold + " " + "!".white.bold + " " + "!".white.bold
         show_marketplace
-        pr = buy_or_not
+        pr = marketplace_navigation
         if pr == "Purchase_Item"
             $current_user.purchase
             puts "Thank you for your purchase!"
@@ -111,7 +114,7 @@ def list_browse
             puts "We have refreshed the marketplace for you.".white.bold
             puts "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++".blue.bold
             show_marketplace
-            list_browse
+            list_browse_purchase
         elsif pr == "List_Item"
             $current_user.list
             list_browse
@@ -120,31 +123,38 @@ def list_browse
             puts "~ ( ( ('>".light_yellow.bold + "     " + "Thanks for stopping by!!".white.underline + "     " + "<') ) ) ~".light_yellow.bold
             puts "   ~ ( ( ('>   <') ) ) ~   ~ ( ( ('>   <') ) ) ~".light_yellow.bold
             exit
-        end
+        end 
+    elsif decision == "Purchase"
+        $current_user.purchase
+            puts "Thank you for your purchase!"
+            list_browse_purchase
     end
 end
-def tty_test
-    $prompt.ask("What is your name?".light_blue.bold, default: ENV["USER"])
-end   
+
 def show_marketplace
     Item.generate_list
-    $available_items.each do |i|
-        puts "============================================================".red.bold
-        puts "Item Name:".cyan.bold
-        puts i.item_name
-        puts "Category:".cyan.bold
-        puts i.category
-        puts "Condition:".cyan.bold
-        puts i.condition
-        puts "Price:".cyan.bold
-        puts i.price
-        puts "Item Description:".cyan.bold
-        puts i.description
-        puts "Item Location:".cyan.bold
-        puts i.location
-        puts "============================================================".blue.bold
+    if $available_items.any? == true
+        $available_items.each do |i|
+            puts "============================================================".red.bold
+            puts "Item Name:".cyan.bold
+            puts i.item_name
+            puts "Category:".cyan.bold
+            puts i.category
+            puts "Condition:".cyan.bold
+            puts i.condition
+            puts "Price:".cyan.bold
+            puts i.price
+            puts "Item Description:".cyan.bold
+            puts i.description
+            puts "Item Location:".cyan.bold
+            puts i.location
+            puts "============================================================".blue.bold
+        end
+    else
+        puts "Our marketplace currently has no items listed. Be the first one to post a new item or check back later!"
     end
 end
+
 def logvnew
     $prompt.select("Do you have an existing account?".cyan.bold, %w(Log_In Create_New_Account), required: true)
 end
@@ -237,5 +247,6 @@ end
 welcome
 authenticate_or_create
 access_verification
-list_browse
+list_browse_purchase
+
 binding.pry
