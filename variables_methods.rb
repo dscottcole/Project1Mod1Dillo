@@ -1,5 +1,7 @@
 require_relative './config/environment.rb'
 require 'pry'
+ActiveRecord::Base.logger = nil
+
 scott = User.all[0]
 ted = User.all[1]
 bobby = User.all[2]
@@ -86,6 +88,9 @@ end
 def get_pass
     $prompt.mask("Please enter a password.".cyan.bold, required: true)
 end
+def get_pass2
+    $prompt.mask("Please repeat your password.".cyan.bold, required: true)
+end
 def list_browse
     decision = interest
     if decision == "List"
@@ -93,6 +98,7 @@ def list_browse
         puts "Best of luck!"
         list_browse
     else
+        puts " "
         puts "WE ARE BROWSING, BABY".light_magenta.underline + " " "!".white.bold + " " + "!".white.bold + " " + "!".white.bold
         show_marketplace
         pr = buy_or_not
@@ -142,6 +148,7 @@ end
 def logvnew
     $prompt.select("Do you have an existing account?".cyan.bold, %w(Log_In Create_New_Account), required: true)
 end
+
 def login
     attempts = 0
     User.credential_hash
@@ -170,29 +177,62 @@ def login
     end 
 end
 
-def new_user
-    first_last = get_name
-    loc = get_loc
-    uname = get_user
-    pass = get_pass
-    User.create(name: first_last, location: loc, username:uname, password: pass)
-    puts "Thank you for creating a new account!".light_green.bold
-end
-def authenticate_or_create
-    choice = logvnew
-    if choice == "Log_In"
-        login
-    elsif choice == "Create_New_Account"
-        new_user
-        login
-    end
-end
 def access_verification
     if $current_user != nil
     else
         exit
     end
 end
+
+def new_user
+    pass_attempt = 0
+    user_attempt = 0
+    uname = nil
+    User.credential_hash
+
+    first_last = get_name
+    loc = get_loc
+    
+    until $cred_hash.keys.include?(uname) == false && uname != nil do
+    uname = get_user
+        if $cred_hash.keys.include?(uname) == true
+            puts "Username is taken. Be more creative."
+        end
+    end
+
+    while pass_attempt < 3 do
+        pass = get_pass
+        pass2 = get_pass2
+        if pass != pass2
+            puts "Passwords do not match."
+        elsif pass == pass2
+            User.create(name: first_last, location: loc, username:uname, password: pass)
+            puts "Thank you for creating a new account! Please use your new credentials to log in.".light_green.bold
+            login
+            pass_attempt = 3
+        end
+    pass_attempt +=1
+
+        if pass_attempt == 2
+            puts "This is your final attempt at logging in."
+        end
+        if pass_attempt == 3  
+            puts "You have exceeded your account creation attempts. Happy trails!"
+            binding.pry
+            exit
+        end
+    end
+end
+
+def authenticate_or_create
+    choice = logvnew
+    if choice == "Log_In"
+        login
+    elsif choice == "Create_New_Account"
+        new_user
+    end
+end
+
 ###########################################################################################################################
 welcome
 authenticate_or_create
