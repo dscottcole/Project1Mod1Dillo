@@ -4,20 +4,20 @@ class User < ActiveRecord::Base
 
     $cred_hash = {}
 
-    def get_listing
-        $prompt.ask("What item would you like to list in the marketplace?", default: ENV["USER"])
+    def get_list
+        $prompt.ask("What item would you like to list in the marketplace?", required: true)
     end
-    def get_category
-        $prompt.select("What category best describes your item?", %w(Active Gaming Clothing Furniture Computers Household Hardware Auto ))
+    def get_cat
+        $prompt.select("What category best describes your item?", $cat, required: true)
     end
-    def get_condition
-        $prompt.select("What is your item's condition?", %w(New Used_Like_New Used_Fair Used_Not_Great))
+    def get_cond
+        $prompt.select("What is your item's condition?", $cond, required: true)
     end
     def get_price
-        $prompt.ask("How much $ do you want for your item?", default: ENV["USER"])
+        $prompt.ask("How much $ do you want for your item?", required: true)
     end
-    def get_description
-        $prompt.ask("Please provide a description for your item.", default: ENV["USER"])
+    def get_desc
+        $prompt.ask("Please provide a description for your item.", required: true)
     end
     def get_s_address 
         $prompt.ask("Please provide a shipping address.", required: true)
@@ -27,18 +27,25 @@ class User < ActiveRecord::Base
     end
     def get_item
         Item.generate_list
-        $prompt.select("What item would you like to purchase?", $item_array)
+        $prompt.select("What item would you like to purchase?", $item_array, required: true)
+    end
+    def get_your_items
+        Item.generate_list
+        $prompt.select("What item would you like to modify the price for?", $user_items, required: true)
     end
     def shipvlocal
-        $prompt.select("Would this item be shipped or will it be picked up locally?", %w(Shipment Local))
+        $prompt.select("Would this item be shipped or will it be picked up locally?", %w(Shipment Local), required: true)
+    end
+    def get_new_price
+        $prompt.ask("What would you like to change the price to?", required: true)
     end
      
     def list
-        item = get_listing
-        cat = get_category
-        cond = get_condition
+        item = get_list
+        cat = get_cat
+        cond = get_cond
         pri = get_price
-        desc = get_description
+        desc = get_desc
         Item.create(item_name: item, user_id: self.id, location: self.location, category: cat, condition: cond, price: pri, description: desc)
     end
 
@@ -48,7 +55,9 @@ class User < ActiveRecord::Base
         b = a.find_all {|i| i == self.id}
 
         if a.length == b.length
+            puts "========================================"
             puts "You own all the items in the marketplace."
+            puts "========================================"
             list_browse_purchase
         end
         
@@ -76,9 +85,32 @@ class User < ActiveRecord::Base
         end
     end
 
-
     def self.credential_hash
     $cred_hash =  User.all.map {|u| [u.username, u.username+u.password]}.to_h
     end
 
+    def get_user_items
+        Item.generate_list
+        $user_items = $item_array.find_all {|i| i[:value].user_id == self.id}
+    end
+
+    def change_item_price
+        a = $available_items.map {|i| i.user_id}
+       
+        if  a.any?(self.id) == false
+            puts "===================================================".light_red.bold
+            puts "You do not own any of the items in the marketplace.".white.bold
+            puts "===================================================".light_blue.bold
+            list_browse_purchase
+        else
+            self.get_user_items
+            Item.generate_list
+            int_item = get_your_items
+            item = Item.all.find_by(id: int_item.id)
+            puts "The current item price is: #{item.price}"
+            new_price = get_new_price
+            Item.all.find_by(id: int_item.id).update(price: new_price)
+            puts "Item price is now #{Item.all.find_by(id: int_item.id).price}"
+        end
+    end
 end

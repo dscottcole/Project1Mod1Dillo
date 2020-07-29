@@ -6,9 +6,11 @@ bobby = User.all[2]
 marshall = User.all[3]
 $prompt = TTY::Prompt.new
 $current_user = nil
-$choice_array = ["List Item", "Browse", "Purchase Item", "Exit Marketplace"]
-$choice_array2 = ["Purchase Item", "Refresh Marketplace", "List Item", "Exit Marketplace"]
+$choice_array = ["List Item", "Browse", "Purchase Item", "Change Item Price", "Exit Marketplace"]
+$choice_array2 = ["Purchase Item", "Refresh Marketplace", "List Item","Change Item Price", "Exit Marketplace"]
 $log_new = ["Log In", "Create New Account"]
+$cond = ["New", "Used Like New", "Used Fair", "Used Not Great"]
+$cat = ["Active", "Gaming", "Clothing", "Furniture", "Computers", "Household", "Hardware Auto"]
 
 
 def welcome
@@ -121,6 +123,9 @@ def list_browse_purchase
         elsif pr == "List Item"
             $current_user.list
             list_browse_purchase
+        elsif pr == "Change Item Price"
+            $current_user.change_item_price
+            list_browse_purchase
         elsif pr == "Exit Marketplace"
             puts "   <') ) ) ~   ~ ( ( ('>    <') ) ) ~   ~ ( ( ('>".light_yellow.bold
             puts "~ ( ( ('>".light_yellow.bold + "     " + "Thanks for stopping by!!".white.underline + "     " + "<') ) ) ~".light_yellow.bold
@@ -130,6 +135,9 @@ def list_browse_purchase
     elsif decision == "Purchase Item"
         $current_user.purchase
         puts "Thank you for your purchase!"
+        list_browse_purchase
+    elsif decision == "Change Item Price"
+        $current_user.change_item_price
         list_browse_purchase
     elsif decision == "Exit Marketplace"
         puts "   <') ) ) ~   ~ ( ( ('>    <') ) ) ~   ~ ( ( ('>".light_yellow.bold
