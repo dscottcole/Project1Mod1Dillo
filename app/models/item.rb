@@ -3,7 +3,8 @@ class Item < ActiveRecord::Base
     belongs_to :order
 
     $available_items = " "
-    $available_items_array = ""
+    $available_items_array = []
+    $angelo_hash = {}
     # $available_items_g = " "
 
     # def self.generate_list_g
@@ -16,12 +17,12 @@ class Item < ActiveRecord::Base
 
     def self.generate_list
         item_list = Item.all.where(order_id: nil)
-        $available_items = item_list
+        
+        hashy = item_list.map  {|i| [i.item_name, i]}.to_h
 
-        array = item_list.map do |i|
-            i.item_name
-        end
-        $available_items_array = array
+        $available_items = item_list
+        $angelo_hash = hashy
+        $available_items_array = $angelo_hash.keys
     end
 
 end
