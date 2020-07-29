@@ -27,10 +27,7 @@ class User < ActiveRecord::Base
     end
     def get_item
         Item.generate_list
-        # Item.generate_list_g
-        # $prompt.ask('What item would you like to purchase?', required: true)
-        $prompt.ask("What item would you like to purchase? Available items: #{$available_items_array}", required: true)
-        # $prompt.select("What item would you like to purchase?", %w($available_items_array))    # ----- Need to get list of items being sold to populate
+        $prompt.select("What item would you like to purchase?", $item_hash)
     end
     def shipvlocal
         $prompt.select("Would this item be shipped or will it be picked up locally?", %w(Shipment Local))
@@ -46,16 +43,15 @@ class User < ActiveRecord::Base
     end
 
     def purchase
-        item_name = get_item
-        item = Item.all.find_by(item_name: item_name)
-        if self.id == item.user_id
+        binding.pry
+        item_selection = get_item.item_name
+        item = Item.all.find_by(item_name: item_selection)
+
+        until self.id != item.user_id do
             puts "You cannot purchase your own item."
-            self.purchase
-        end
-        if item.order_id != nil
-            puts "That item is no longer available for purchase."
-            self.purchase
-        end
+            item_selection = get_item.item_name
+            item = Item.all.find_by(item_name: item_selection)
+        end        
 
         ship_vs_local = shipvlocal
 
@@ -64,7 +60,7 @@ class User < ActiveRecord::Base
             order_t = "Local"
             new_order = Order.create(seller: item.user_id, buyer: self.id, item_id:item.id, order_type: order_t, shipping?: false, shipping_address: nil, meeting_location: address)
             Item.all.find_by(id: item.id).update(order_id: new_order.id)
-        else
+        elsif ship_vs_local == "Shipment"
             address = get_s_address
             order_t = "Shipment"
             new_order = Order.create(seller: item.user_id, buyer: self.id, item_id:item.id, order_type: order_t, shipping?: true, shipping_address: address, meeting_location: nil)
