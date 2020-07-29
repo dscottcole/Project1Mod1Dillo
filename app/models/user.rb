@@ -28,11 +28,11 @@ class User < ActiveRecord::Base
     def get_item
         Item.generate_list
         # $prompt.ask('What item would you like to purchase?', required: true)
-        $prompt.ask("What item would you like to purchase? Available items: #{$available_items}", default: ENV["USER"])
+        $prompt.ask("What item would you like to purchase? Available items: #{$available_items_array}", default: ENV["USER"])
         # $prompt.select("What item would you like to purchase?", %w($available_items))    # ----- Need to get list of items being sold to populate
     end
     def shipvlocal
-        $prompt.select("What is your item's condition?", %w(Shipment Local))
+        $prompt.select("Would you like Local Pickup, or would you like your item shipped?.", %w(Shipment Local))
     end
      
     def list
