@@ -1,5 +1,3 @@
-require_relative './config/environment.rb'
-require 'pry'
 ActiveRecord::Base.logger = nil
 
 scott = User.all[0]
@@ -126,8 +124,8 @@ def list_browse_purchase
         end 
     elsif decision == "Purchase"
         $current_user.purchase
-            puts "Thank you for your purchase!"
-            list_browse_purchase
+        puts "Thank you for your purchase!"
+        list_browse_purchase
     end
 end
 
@@ -244,9 +242,4 @@ def authenticate_or_create
 end
 
 ###########################################################################################################################
-welcome
-authenticate_or_create
-access_verification
-list_browse_purchase
 
-binding.pry
