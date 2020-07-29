@@ -6,6 +6,10 @@ bobby = User.all[2]
 marshall = User.all[3]
 $prompt = TTY::Prompt.new
 $current_user = nil
+$choice_array = ["List Item", "Browse", "Purchase Item", "Exit Marketplace"]
+$choice_array2 = ["Purchase Item", "Refresh Marketplace", "List Item", "Exit Marketplace"]
+$log_new = ["Log In", "Create New Account"]
+
 
 def welcome
 puts " "
@@ -44,8 +48,8 @@ puts "
                                                                                 ██░░██████████                 
                                                                               ██████                  
     88 88                          
-    d                                    88                           
-    88                                   88                             
+    d                                   88 88                        
+    88                                  88                             
 MMMM88MMM 8b dPPYba adPPYYba     adPPYb 88 88 8b dPPYba     adPPYbd8  
     88    88P      Y8       Y8 a8      Y88 88 88P      8a a8      Y88  
     88    88         adPPPPP88 8b       88 88 88       88 8b       88  
@@ -71,13 +75,13 @@ puts "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 end
 
 def interest
-    $prompt.select("Would you like to list an item, browse the marketplace, or make a purchase without browsing?".cyan.bold, %w(List Browse Purchase), required: true)
+    $prompt.select("Would you like to list an item, browse the marketplace, or make a purchase without browsing?".cyan.bold, $choice_array, required: true)
 end
 def marketplace_navigation
-    $prompt.select("Select from the following:".cyan.bold, %w(Purchase_Item Refresh_Marketplace List_Item Exit_Marketplace), required: true)
+    $prompt.select("Select from the following:".cyan.bold, $choice_array2, required: true)
 end
 def get_name
-    $prompt.ask("Please enter your first and last names. (examples: John Doe, Jane Doe)".cyan.bold, required: true)
+    $prompt.ask("Please enter your first and last. (examples: John Doe, Jane Doe)".cyan.bold, required: true)
 end
 def get_loc
     $prompt.select("Where are you located?".cyan.bold, %w(Houston Austin Dallas), required: true)
@@ -93,39 +97,45 @@ def get_pass2
 end
 
 def list_browse_purchase
+    Item.generate_list
     decision = interest
-    if decision == "List"
+    if decision == "List Item"
         $current_user.list
         puts "Best of luck!"
-        list_browse
+        list_browse_purchase
     elsif decision == "Browse"
         puts " "
         puts "BOOM!! WE ARE BROWSING, BABY!".light_magenta.underline + " " "!".white.bold + " " + "!".white.bold + " " + "!".white.bold
         show_marketplace
         pr = marketplace_navigation
-        if pr == "Purchase_Item"
+        if pr == "Purchase Item"
             $current_user.purchase
             puts "Thank you for your purchase!"
-            list_browse
-        elsif pr == "Refresh_Marketplace"
+            list_browse_purchase
+        elsif pr == "Refresh Marketplace"
             puts "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++".red.bold
             puts "We have refreshed the marketplace for you.".white.bold
             puts "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++".blue.bold
             show_marketplace
             list_browse_purchase
-        elsif pr == "List_Item"
+        elsif pr == "List Item"
             $current_user.list
-            list_browse
-        elsif pr == "Exit_Marketplace"
+            list_browse_purchase
+        elsif pr == "Exit Marketplace"
             puts "   <') ) ) ~   ~ ( ( ('>    <') ) ) ~   ~ ( ( ('>".light_yellow.bold
             puts "~ ( ( ('>".light_yellow.bold + "     " + "Thanks for stopping by!!".white.underline + "     " + "<') ) ) ~".light_yellow.bold
             puts "   ~ ( ( ('>   <') ) ) ~   ~ ( ( ('>   <') ) ) ~".light_yellow.bold
             exit
         end 
-    elsif decision == "Purchase"
+    elsif decision == "Purchase Item"
         $current_user.purchase
         puts "Thank you for your purchase!"
         list_browse_purchase
+    elsif decision == "Exit Marketplace"
+        puts "   <') ) ) ~   ~ ( ( ('>    <') ) ) ~   ~ ( ( ('>".light_yellow.bold
+        puts "~ ( ( ('>".light_yellow.bold + "     " + "Thanks for stopping by!!".white.underline + "     " + "<') ) ) ~".light_yellow.bold
+        puts "   ~ ( ( ('>   <') ) ) ~   ~ ( ( ('>   <') ) ) ~".light_yellow.bold
+        exit
     end
 end
 
@@ -154,7 +164,7 @@ def show_marketplace
 end
 
 def logvnew
-    $prompt.select("Do you have an existing account?".cyan.bold, %w(Log_In Create_New_Account), required: true)
+    $prompt.select("Do you have an existing account?".cyan.bold, $log_new , required: true)
 end
 
 def login
@@ -234,9 +244,9 @@ end
 
 def authenticate_or_create
     choice = logvnew
-    if choice == "Log_In"
+    if choice == "Log In"
         login
-    elsif choice == "Create_New_Account"
+    elsif choice == "Create New Account"
         new_user
     end
 end

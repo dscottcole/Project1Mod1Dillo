@@ -15,8 +15,8 @@ headset = Item.create(item_name: "Hyper X Cloud", user_id: 2,location: "Houston"
 bell = Item.create(item_name: "Bike Bell", user_id: 1, location: "Houston", category: "Bicycles", condition: "Used_not_great", price: 10.00, description: "Stainless Steel Desk Bell fashioned for a bike... Ding in style")
 # = Item.create(item_name: "", user_id:,  location: "", category: "", condition: "", price: , description: "")
 
-o1 = Order.create(seller: 1, buyer: 2, item_id: 1, order_type: "Local", shipping?: false, shipping_address: nil, meeting_location: "123 Fake Street. Houston, TX 77777")
-o2 = Order.create(seller: 2, buyer: 1, item_id: 2, order_type: "Local", shipping?: false, shipping_address: nil, meeting_location: "456 Made-up Street. Houston, TX 77777")
+o1 = Order.create(seller: 1, buyer: 2, item_id: 1, order_type: "Local", shipping?: false, shipping_address: nil, meeting_location: "123 Fake Street. Houston, TX 77777", date: 2020/07/27, time: 1600)
+o2 = Order.create(seller: 2, buyer: 1, item_id: 2, order_type: "Local", shipping?: false, shipping_address: nil, meeting_location: "456 Made-up Street. Houston, TX 77777", date: 2020_07_20, time: 1330)
 o3 = Order.create(seller: 3, buyer: 1, item_id: 3, order_type: "Shipment", shipping?: true, shipping_address: "Scott's House, Houston, TX 77777", meeting_location: nil)
 o4 = Order.create(seller: 3, buyer: 2, item_id: 4, order_type: "Shipment", shipping?: true, shipping_address: "Ted's, Houston, TX 77777", meeting_location: nil)
 o5 = Order.create(seller: 4, buyer: 3, item_id: 5, order_type: "Shipment", shipping?: true, shipping_address: "Bobby's House, Houston, TX 77777", meeting_location: nil)
