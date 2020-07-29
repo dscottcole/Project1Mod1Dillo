@@ -27,7 +27,7 @@ class User < ActiveRecord::Base
     end
     def get_item
         Item.generate_list
-        $prompt.select("What item would you like to purchase?", $item_hash)
+        $prompt.select("What item would you like to purchase?", $item_array)
     end
     def shipvlocal
         $prompt.select("Would this item be shipped or will it be picked up locally?", %w(Shipment Local))
@@ -43,7 +43,15 @@ class User < ActiveRecord::Base
     end
 
     def purchase
-        binding.pry
+        # binding.pry
+        a = $available_items.map {|i| i.user_id}
+        b = a.find_all {|i| i == self.id}
+
+        if a.length == b.length
+            puts "You own all the items in the marketplace."
+            list_browse_purchase
+        end
+        
         item_selection = get_item.item_name
         item = Item.all.find_by(item_name: item_selection)
 
