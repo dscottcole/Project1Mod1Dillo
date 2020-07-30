@@ -5,7 +5,10 @@ class User < ActiveRecord::Base
     $cred_hash = {}
 
     def get_list
-        $prompt.ask("What item would you like to list in the marketplace?", required: true)
+        $prompt.ask("What item would you like to list in the marketplace?") do |q|
+            q.required true
+            q.modify :strip
+        end
     end
     def get_cat
         $prompt.select("What category best describes your item?", $cat, required: true)
@@ -14,7 +17,11 @@ class User < ActiveRecord::Base
         $prompt.select("What is your item's condition?", $cond, required: true)
     end
     def get_price
-        $prompt.ask("How much $ do you want for your item?", required: true)
+        $prompt.ask("How much $ do you want for your item?") do |q|
+            q.required true
+            q.convert :float
+            q.messages[:convert?] = "Please enter a number."
+        end
     end
     def get_desc
         $prompt.ask("Please provide a description for your item.", required: true)
@@ -23,7 +30,10 @@ class User < ActiveRecord::Base
         $prompt.ask("Please provide a shipping address.", required: true)
     end
     def get_m_address 
-        $prompt.ask("Please provide a meeting address.", required: true)
+        result = $prompt.ask("Please provide a meeting address.", required: true, convert: :string)
+    end
+    def get_date_time
+        $prompt.ask("Provide a date and time for the meet-up with #{Date.today + 1} being the earliest meet-up date. (Format: YYYY/MM/DD HH:MM)", convert: :time, required: true)
     end
     def get_item
         Item.generate_list
@@ -75,13 +85,16 @@ class User < ActiveRecord::Base
         if ship_vs_local == "Local"
             address = get_m_address
             order_t = "Local"
-            new_order = Order.create(seller: item.user_id, buyer: self.id, item_id:item.id, order_type: order_t, shipping?: false, shipping_address: nil, meeting_location: address)
+            datime = get_date_time
+            new_order = Order.create(seller: item.user_id, buyer: self.id, item_id:item.id, order_type: order_t, shipping?: false, shipping_address: nil, meeting_location: address, date_time: datime)
             Item.all.find_by(id: item.id).update(order_id: new_order.id)
+            puts "Thank you for your purchase! The seller will contact you via email if there are any issues with the meet-up time/date."
         elsif ship_vs_local == "Shipment"
             address = get_s_address
             order_t = "Shipment"
-            new_order = Order.create(seller: item.user_id, buyer: self.id, item_id:item.id, order_type: order_t, shipping?: true, shipping_address: address, meeting_location: nil)
+            new_order = Order.create(seller: item.user_id, buyer: self.id, item_id:item.id, order_type: order_t, shipping?: true, shipping_address: address, meeting_location: nil, date_time: nil)
             Item.all.find_by(id: item.id).update(order_id: new_order.id)
+            puts "Thank you for your purchase! You should receive an email with a tracking number and additional seller information."
         end
     end
 
