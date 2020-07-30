@@ -49,6 +49,10 @@ class User < ActiveRecord::Base
     def get_new_price
         $prompt.ask("What would you like to change the price to?", required: true)
     end
+
+    def get_order_type
+        $prompt.select("Would you like to view your Sales or Purchases?", $salesvpurch, required: true)
+    end
      
     def list
         item = get_list
@@ -89,12 +93,20 @@ class User < ActiveRecord::Base
             new_order = Order.create(seller: item.user_id, buyer: self.id, item_id:item.id, order_type: order_t, shipping?: false, shipping_address: nil, meeting_location: address, date_time: datime)
             Item.all.find_by(id: item.id).update(order_id: new_order.id)
             puts "Thank you for your purchase! The seller will contact you via email if there are any issues with the meet-up time/date."
+            puts "Seller Information:"
+            puts "#{item.user.name}"
+            puts "#{item.user.email}"
+            puts "Please contact seller with any additional questions."          
         elsif ship_vs_local == "Shipment"
             address = get_s_address
             order_t = "Shipment"
             new_order = Order.create(seller: item.user_id, buyer: self.id, item_id:item.id, order_type: order_t, shipping?: true, shipping_address: address, meeting_location: nil, date_time: nil)
             Item.all.find_by(id: item.id).update(order_id: new_order.id)
-            puts "Thank you for your purchase! You should receive an email with a tracking number and additional seller information."
+            puts "Thank you for your purchase! Expect to receive an email with a tracking number and additional information."
+            puts "Seller Information:"
+            puts "#{item.user.name}"
+            puts "#{item.user.email}"
+            puts "Please contact seller with any additional questions."
         end
     end
 
@@ -126,4 +138,56 @@ class User < ActiveRecord::Base
             puts "Item price is now #{Item.all.find_by(id: int_item.id).price}"
         end
     end
+
+    def view_orders
+        type = get_order_type
+        if type == "Sales"
+            puts "Sales:"
+            order_array = Order.all.where(seller: self.id)
+            if order_array.any? == false
+                puts "You have no sales to display."
+            else
+                order_array.each do |o|
+                    puts "============================================================".red.bold
+                    puts "Order type:"
+                    puts o.order_type
+                    puts "Buyer Name:"
+                    puts User.all.find_by(id: o.buyer).name
+                    puts "Buyer Email:"
+                    puts User.all.find_by(id: o.buyer).email
+                    puts "Item Name:"
+                    puts o.item.item_name
+                    puts "Item Condition:"
+                    puts o.item.condition
+                    puts "Item Price:"
+                    puts o.item.price
+                    puts "============================================================".blue.bold
+                end
+            end
+        elsif type == "Purchases"
+            puts "Purchases:"
+            order_array = Order.all.where(buyer: self.id)
+            if order_array.any? == false
+                puts "You have no purchases to display."
+            else
+                order_array.each do |o|
+                    puts "============================================================".red.bold
+                    puts "Order type:"
+                    puts o.order_type
+                    puts "Seller Name:"
+                    puts o.item.user.name
+                    puts "Seller Email:"
+                    puts o.item.user.email
+                    puts "Item Name:"
+                    puts o.item.item_name
+                    puts "Item Condition:"
+                    puts o.item.condition
+                    puts "Item Price:"
+                    puts o.item.price
+                    puts "============================================================".blue.bold
+                end
+            end
+        end
+    end
+
 end
