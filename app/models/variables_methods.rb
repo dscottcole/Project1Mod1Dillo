@@ -18,7 +18,7 @@ def welcome
 puts " "
 puts " "
 puts "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++".red.bold
-puts "H".light_red.bold + " " + "o".light_red.bold + " " + "w".light_red.bold + " " + "d".light_red.bold + " " + "y".light_red.bold + " " + "Yall".white.bold + "!!!".light_blue.bold + " " + "Welcome to the Armadillo Trading Post. You can list and procure anything 'cept 'dillos.".white.bold
+puts "H".light_red.bold + " " + "o".light_red.bold + " " + "w".light_red.bold + " " + "d".light_red.bold + " " + "y".light_red.bold + " " + "Y'all".white.bold + "!!!".light_blue.bold + " " + "Welcome to the Armadillo Trading Post. You can list and procure anything 'cept 'dillos.".white.bold
 puts "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++".blue.bold
 puts "
                                                       ████████████████████                                     
@@ -71,32 +71,38 @@ MMMM88MMM 8b dPPYba adPPYYba     adPPYb 88 88 8b dPPYba     adPPYbd8
                                                          888                            
                                                          888                            
                                                          888  
-".light_yellow
+".light_yellow.bold
 puts "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++".red.bold
 puts "       <') ) ) ~       <') ) ) ~       <') ) ) ~       ~ ( ( ('>       ~ ( ( ('>       ~ ( ( ('>      ".white.bold
 puts "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++".blue.bold
 end
 
-def interest
-    $prompt.select("Would you like to list an item, browse the marketplace, or make a purchase without browsing?".cyan.bold, $choice_array, required: true)
+def thank_you
+    puts "   <') ) ) ~   ~ ( ( ('>    <') ) ) ~   ~ ( ( ('>".light_yellow.bold
+    puts "~ ( ( ('>".light_yellow.bold + "     " + "Thanks for stopping by!!".white.underline + "     " + "<') ) ) ~".light_yellow.bold
+    puts "   ~ ( ( ('>   <') ) ) ~   ~ ( ( ('>   <') ) ) ~".light_yellow.bold
 end
-def marketplace_navigation
-    $prompt.select("Select from the following:".cyan.bold, $choice_array2, required: true)
+
+def interest
+    $prompt.select("What would you like to do?".light_yellow.bold, $choice_array, required: true)
+end
+def marketplace_secondary_nav
+    $prompt.select("Select from the following:".light_yellow.bold, $choice_array2, required: true)
 end
 def get_name
-    $prompt.ask("Please enter your first and last. (examples: John Doe, Jane Doe)".cyan.bold, required: true)
+    $prompt.ask("Please enter your first and last. (examples: John Doe, Jane Doe)".light_yellow.bold, required: true)
 end
 def get_loc
-    $prompt.select("Where are you located?".cyan.bold, %w(Houston Austin Dallas), required: true)
+    $prompt.select("Where are you located?".light_yellow.bold, %w(Houston Austin Dallas), required: true)
 end
 def get_user
-    $prompt.ask("Please enter a username.".cyan.bold, required: true)
+    $prompt.ask("Please enter a username.".light_yellow.bold, required: true)
 end
 def get_pass
-    $prompt.mask("Please enter a password.".cyan.bold, required: true)
+    $prompt.mask("Please enter a password.".light_yellow.bold, required: true)
 end
 def get_pass2
-    $prompt.mask("Please repeat your password.".cyan.bold, required: true)
+    $prompt.mask("Please repeat your password.".light_yellow.bold, required: true)
 end
 def get_email
     $prompt.ask('What is your email?') do |q| 
@@ -105,101 +111,100 @@ def get_email
         q.messages[:email] = "Invalid email address"
     end
 end
+def logvnew
+    $prompt.select("Do you have an existing account?".light_yellow.bold, $log_new , required: true)
+end
 
-def list_browse_purchase
+def marketplace_menu
     Item.generate_list
     decision = interest
     if decision == "List Item"
         $current_user.list
-        puts "Best of luck!"
-        list_browse_purchase
+        puts "Best of luck!".white.bold
+        marketplace_menu
     elsif decision == "Browse"
-        puts " "
-        puts "BOOM!! WE ARE BROWSING, BABY!".light_magenta.underline + " " "!".white.bold + " " + "!".white.bold + " " + "!".white.bold
         show_marketplace
-        pr = marketplace_navigation
+        pr = marketplace_secondary_nav
         if pr == "Purchase Item"
             $current_user.purchase
-            list_browse_purchase
+            marketplace_menu
         elsif pr == "Refresh Marketplace"
-            puts "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++".red.bold
-            puts "We have refreshed the marketplace for you.".white.bold
-            puts "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++".blue.bold
             show_marketplace
-            list_browse_purchase
+            marketplace_menu
         elsif pr == "List Item"
             $current_user.list
-            list_browse_purchase
+            marketplace_menu
         elsif pr == "Change Item Price"
             $current_user.change_item_price
-            list_browse_purchase
+            marketplace_menu
         elsif pr == "Order History"
             $current_user.view_orders
-            list_browse_purchase
+            marketplace_menu
         elsif pr == "Exit Marketplace"
-            puts "   <') ) ) ~   ~ ( ( ('>    <') ) ) ~   ~ ( ( ('>".light_yellow.bold
-            puts "~ ( ( ('>".light_yellow.bold + "     " + "Thanks for stopping by!!".white.underline + "     " + "<') ) ) ~".light_yellow.bold
-            puts "   ~ ( ( ('>   <') ) ) ~   ~ ( ( ('>   <') ) ) ~".light_yellow.bold
+            thank_you
             exit
         end 
     elsif decision == "Purchase Item"
         $current_user.purchase
-        list_browse_purchase
+        marketplace_menu
     elsif decision == "Change Item Price"
         $current_user.change_item_price
-        list_browse_purchase
+        marketplace_menu
     elsif decision == "Order History"
         $current_user.view_orders
-        list_browse_purchase
+        marketplace_menu
     elsif decision == "Exit Marketplace"
-        puts "   <') ) ) ~   ~ ( ( ('>    <') ) ) ~   ~ ( ( ('>".light_yellow.bold
-        puts "~ ( ( ('>".light_yellow.bold + "     " + "Thanks for stopping by!!".white.underline + "     " + "<') ) ) ~".light_yellow.bold
-        puts "   ~ ( ( ('>   <') ) ) ~   ~ ( ( ('>   <') ) ) ~".light_yellow.bold
+        thank_you
         exit
     end
 end
 
 def show_marketplace
+    system "clear"
+    puts " "
+    puts "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++".red.bold
+    puts "                  Available Marketplace Items:                  ".white.bold
+    puts "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++".blue.bold
     Item.generate_list
     if $available_items.any? == true
         $available_items.each do |i|
             puts "============================================================".red.bold
-            puts "Item Name:".cyan.bold
+            puts "Item Name:".light_yellow.bold
             puts i.item_name
-            puts "Category:".cyan.bold
+            puts "Category:".light_yellow.bold
             puts i.category
-            puts "Condition:".cyan.bold
+            puts "Condition:".light_yellow.bold
             puts i.condition
-            puts "Price:".cyan.bold
+            puts "Price:".light_yellow.bold
             puts i.price
-            puts "Item Description:".cyan.bold
+            puts "Item Description:".light_yellow.bold
             puts i.description
-            puts "Item Location:".cyan.bold
+            puts "Item Location:".light_yellow.bold
             puts i.location
             puts "============================================================".blue.bold
+            sleep 0.75
         end
-    else
-        puts "Our marketplace currently has no items listed. Be the first one to post a new item or check back later!"
+    elsif $available_items.any? == false
+        puts "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++".red.bold
+        puts "          Our marketplace currently has no items listed. Post a new item or check back later!          ".white.bold
+        puts "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++".blue.bold
     end
-end
-
-def logvnew
-    $prompt.select("Do you have an existing account?".cyan.bold, $log_new , required: true)
 end
 
 def login
     attempts = 0
     User.credential_hash
     while attempts < 3 do
-    username = $prompt.ask("What is your username?".cyan.bold, required: true)
-    password = $prompt.mask("What is your password?".cyan.bold, required: true)
+    username = $prompt.ask("What is your username?".light_yellow.bold, required: true)
+    password = $prompt.mask("What is your password?".light_yellow.bold, required: true)
     credentials = username + password
         if $cred_hash.keys.include?(username) == false
-            puts "Username incorrect".light_red.bold
+            puts "Username incorrect".red.bold
         elsif $cred_hash.values.include?(credentials) == true
-            puts "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++".red.bold
+            system "clear"
+            puts "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++".red.bold
             puts "Thanks for visiting the Armadillo Trading Post, #{username}!!".white.bold
-            puts "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++".blue.bold
+            puts "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++".blue.bold
             $current_user = User.all.find_by(username: username)
             attempts = 3
         elsif $cred_hash.values.include?(credentials) == false
@@ -207,10 +212,10 @@ def login
         end
         attempts += 1
         if attempts == 2
-            puts "This is your final attempt at logging in."
+            puts "This is your final attempt at logging in.".red.bold
         end
         if attempts == 3 
-            puts "You have exceeded your login attempts. Happy trails!" 
+            puts "You have exceeded your login attempts.".red.underline + " " + "Happy trails!".light_yellow.bold
         end
     end 
 end
@@ -235,7 +240,7 @@ def new_user
     until $cred_hash.keys.include?(uname) == false && uname != nil do
     uname = get_user
         if $cred_hash.keys.include?(uname) == true
-            puts "Username is taken. Be more creative."
+            puts "Username is taken. Be more creative.".red.bold
         end
     end
 
@@ -243,7 +248,7 @@ def new_user
         pass = get_pass
         pass2 = get_pass2
         if pass != pass2
-            puts "Passwords do not match."
+            puts "Passwords do not match.".red.bold
         elsif pass == pass2
             User.create(name: first_last, location: loc, username:uname, password: pass, email: in_email )
             puts "Thank you for creating a new account! Please use your new credentials to log in.".light_green.bold
@@ -253,10 +258,10 @@ def new_user
     pass_attempt +=1
 
         if pass_attempt == 2
-            puts "This is your final attempt at logging in."
+            puts "This is your final attempt at logging in.".white.bold
         end
         if pass_attempt == 3  
-            puts "You have exceeded your account creation attempts. Happy trails!"
+            puts "You have exceeded your account creation attempts.".red.underline + " " + "Happy trails!".light_yellow.bold
             binding.pry
             exit
         end
@@ -274,3 +279,9 @@ end
 
 ###########################################################################################################################
 
+def sleeper(stringythingy, sleepytime)
+    for i in stringythingy.chars.to_a do
+        print i
+    sleep sleepytime
+    end
+end
