@@ -6,9 +6,9 @@ bobby = User.all[2]
 marshall = User.all[3]
 $prompt = TTY::Prompt.new
 $current_user = nil
-$choice_array = ["List Item", "Browse", "Purchase Item", "Change Item Price", "Order History", "Exit Marketplace"]
-$choice_array2 = ["Purchase Item", "Refresh Marketplace", "List Item", "Change Item Price", "Order History", "Exit Marketplace"]
-$log_new = ["Log In", "Create New Account"]
+$choice_array = ["List Item", "Browse", "Purchase Item", "Change Item Price", "Order History", "Log Out"]
+$choice_array2 = ["Purchase Item", "Refresh Marketplace", "List Item", "Change Item Price", "Order History", "Log Out"]
+$log_new_browse = ["Log In", "Create New Account", "Browse Without Logging In"]
 $cond = ["New", "Used Like New", "Used Fair", "Used Not Great"]
 $cat = ["Active", "Gaming", "Clothing", "Furniture", "Computers", "Household", "Hardware Auto"]
 $salesvpurch = ["Sales", "Purchases"]
@@ -105,14 +105,14 @@ def get_pass2
     $prompt.mask("Please repeat your password.".light_yellow.bold, required: true)
 end
 def get_email
-    $prompt.ask('What is your email?') do |q| 
+    $prompt.ask('What is your email?'.light_yellow.bold) do |q| 
         q.validate :email
         q.required true
         q.messages[:email] = "Invalid email address"
     end
 end
-def logvnew
-    $prompt.select("Do you have an existing account?".light_yellow.bold, $log_new , required: true)
+def logvnewvbrowse
+    $prompt.select("Do you have an existing account?".light_yellow.bold, $log_new_browse , required: true)
 end
 
 def marketplace_menu
@@ -140,9 +140,13 @@ def marketplace_menu
         elsif pr == "Order History"
             $current_user.view_orders
             marketplace_menu
-        elsif pr == "Exit Marketplace"
-            thank_you
-            exit
+        elsif pr == "Log Out"
+            # thank_you
+            system "clear"
+            welcome
+            authenticate_or_create_or_browse
+            access_verification
+            marketplace_menu
         end 
     elsif decision == "Purchase Item"
         $current_user.purchase
@@ -153,9 +157,13 @@ def marketplace_menu
     elsif decision == "Order History"
         $current_user.view_orders
         marketplace_menu
-    elsif decision == "Exit Marketplace"
-        thank_you
-        exit
+    elsif decision == "Log Out"
+        # thank_you
+        system "clear"
+        welcome
+        authenticate_or_create_or_browse
+        access_verification
+        marketplace_menu
     end
 end
 
@@ -252,7 +260,7 @@ def new_user
         elsif pass == pass2
             User.create(name: first_last, location: loc, username:uname, password: pass, email: in_email )
             puts "Thank you for creating a new account! Please use your new credentials to log in.".light_green.bold
-            authenticate_or_create
+            authenticate_or_create_or_browse
             pass_attempt = 3
         end
     pass_attempt +=1
@@ -268,12 +276,15 @@ def new_user
     end
 end
 
-def authenticate_or_create
-    choice = logvnew
+def authenticate_or_create_or_browse
+    choice = logvnewvbrowse
     if choice == "Log In"
         login
     elsif choice == "Create New Account"
         new_user
+    elsif choice == "Browse Without Logging In"
+        show_marketplace
+        authenticate_or_create_or_browse
     end
 end
 
