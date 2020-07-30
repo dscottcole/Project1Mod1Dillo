@@ -3,36 +3,30 @@
 ## Models & Relationships
 
 User has_many :items
-User has_many :locations, through :items
-User has_many :conditions, through :items
+User has_many :orders, through: :items
 
 Items belongs_to :user
-Items belongs_to :location
-Items belongs_to :condition
+Items belongs_to :order
 
-Location has_many :items
-Location has_many :users, through :items
-
-Condition has_many :items
-
-
+Order belongs_to :items
 
 _______________________________________________
 
 ## User Stories
 
 ### MVP
-* User can log in
-* User will be able to browse Marketplace
-* Shippable items would have cart capabilities
-* Message between users if local pickup available
+* User can log in with validation
+* User can create a new user account
+* User can browse/refresh the Marketplace
+* User can list items
+* User can purchase items
+* User can differentiate between Shipping methods. (Shipping/Local Methods)
 
 ### Stretch Goals
 * TTY Prompts
 * Colorize
-
-
-
+* View Order History
+* Change price of listed item
 
 _______________________________________________
 
@@ -51,12 +45,18 @@ _______________________________________________
 
 ### Users (has many items)
 * name
+* location
+* username
+* password
+* email
 
 
 ### Orders (belongs to items)
 * seller
 * buyer
+* item_id
 * order_type
 * shipping?
 * shipping_address
 * meeting_location
+* date_time

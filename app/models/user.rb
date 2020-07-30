@@ -73,9 +73,9 @@ class User < ActiveRecord::Base
         b = a.find_all {|i| i == self.id}
 
         if a.length == b.length
-            puts "========================================".red.bold
+            puts "=========================================".red.bold
             puts "You own all the items in the marketplace.".white.bold
-            puts "========================================".blue.bold
+            puts "=========================================".blue.bold
             marketplace_menu
         end
         
@@ -146,7 +146,7 @@ binding.pry
             puts "The current item price is: #{item.price}".white.bold
             new_price = get_new_price
             Item.all.find_by(id: int_item.id).update(price: new_price)
-            puts "Item price is now #{Item.all.find_by(id: int_item.id).price}".light_green.underline
+            puts "Item price is now #{Item.all.find_by(id: int_item.id).price}".white.bold
         end
     end
 
@@ -155,14 +155,14 @@ binding.pry
         type = get_order_type
         if type == "Sales"
             puts "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++".red.bold
-            puts "                                    Sales                                ".white.bold
+            puts "                                  Sales                                  ".white.bold
             puts "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++".blue.bold
             order_array = Order.all.where(seller: self.id)
             if order_array.any? == false
                 puts "You have no sales to display.".red.bold
             else
                 order_array.each do |o|
-                    puts "============================================================".red.bold
+                    puts "=========================================================================".red.bold
                     puts "Order type:".light_yellow.bold
                     puts o.order_type
                     puts "Buyer Name:".light_yellow.bold
@@ -175,20 +175,20 @@ binding.pry
                     puts o.item.condition
                     puts "Item Price:".light_yellow.bold
                     puts o.item.price
-                    puts "============================================================".blue.bold
+                    puts "=========================================================================".blue.bold
                     sleep 0.75
                 end
             end
         elsif type == "Purchases"
             puts "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++".red.bold
-            puts "                                   Purchases                              ".white.bold
+            puts "                                Purchases                                ".white.bold
             puts "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++".blue.bold
             order_array = Order.all.where(buyer: self.id)
             if order_array.any? == false
                 puts "You have no purchases to display.".red.bold
             else
                 order_array.each do |o|
-                    puts "============================================================".red.bold
+                    puts "=========================================================================".red.bold
                     puts "Order type:".light_yellow.bold
                     puts o.order_type
                     puts "Seller Name:".light_yellow.bold
@@ -201,7 +201,7 @@ binding.pry
                     puts o.item.condition
                     puts "Item Price:".light_yellow.bold
                     puts o.item.price
-                    puts "============================================================".blue.bold
+                    puts "=========================================================================".blue.bold
                     sleep 0.75
                 end
             end
