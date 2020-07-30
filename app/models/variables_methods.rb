@@ -6,11 +6,12 @@ bobby = User.all[2]
 marshall = User.all[3]
 $prompt = TTY::Prompt.new
 $current_user = nil
-$choice_array = ["List Item", "Browse", "Purchase Item", "Change Item Price", "Exit Marketplace"]
-$choice_array2 = ["Purchase Item", "Refresh Marketplace", "List Item","Change Item Price", "Exit Marketplace"]
+$choice_array = ["List Item", "Browse", "Purchase Item", "Change Item Price", "Order History", "Exit Marketplace"]
+$choice_array2 = ["Purchase Item", "Refresh Marketplace", "List Item", "Change Item Price", "Order History", "Exit Marketplace"]
 $log_new = ["Log In", "Create New Account"]
 $cond = ["New", "Used Like New", "Used Fair", "Used Not Great"]
 $cat = ["Active", "Gaming", "Clothing", "Furniture", "Computers", "Household", "Hardware Auto"]
+$salesvpurch = ["Sales", "Purchases"]
 
 
 def welcome
@@ -98,7 +99,11 @@ def get_pass2
     $prompt.mask("Please repeat your password.".cyan.bold, required: true)
 end
 def get_email
-    $prompt.ask('What is your email?') { |q| q.validate :email }
+    $prompt.ask('What is your email?') do |q| 
+        q.validate :email
+        q.required true
+        q.messages[:email] = "Invalid email address"
+    end
 end
 
 def list_browse_purchase
@@ -128,6 +133,9 @@ def list_browse_purchase
         elsif pr == "Change Item Price"
             $current_user.change_item_price
             list_browse_purchase
+        elsif pr == "Order History"
+            $current_user.view_orders
+            list_browse_purchase
         elsif pr == "Exit Marketplace"
             puts "   <') ) ) ~   ~ ( ( ('>    <') ) ) ~   ~ ( ( ('>".light_yellow.bold
             puts "~ ( ( ('>".light_yellow.bold + "     " + "Thanks for stopping by!!".white.underline + "     " + "<') ) ) ~".light_yellow.bold
@@ -139,6 +147,9 @@ def list_browse_purchase
         list_browse_purchase
     elsif decision == "Change Item Price"
         $current_user.change_item_price
+        list_browse_purchase
+    elsif decision == "Order History"
+        $current_user.view_orders
         list_browse_purchase
     elsif decision == "Exit Marketplace"
         puts "   <') ) ) ~   ~ ( ( ('>    <') ) ) ~   ~ ( ( ('>".light_yellow.bold
