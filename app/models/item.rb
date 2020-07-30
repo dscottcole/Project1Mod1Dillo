@@ -5,6 +5,7 @@ class Item < ActiveRecord::Base
     $available_items = " "
     $item_array = []
 
+
     def self.generate_list
         item_list = Item.all.where(order_id: nil)
 

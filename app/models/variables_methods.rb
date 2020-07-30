@@ -57,7 +57,7 @@ MMMM88MMM 8b dPPYba adPPYYba     adPPYb 88 88 8b dPPYba     adPPYbd8
     88    88         adPPPPP88 8b       88 88 88       88 8b       88  
     88    88        88      88  8a     d88 88 88       88  8a     d88  
      Y888 88          8bbdPY8     8bbdPY8  88 88       88     YbbdPY8  
-                                                            aa      88  
+                                                            aa     88  
                                                               Y8bbdP   
                                                                                  888    
                                                                                  888    
@@ -97,6 +97,9 @@ end
 def get_pass2
     $prompt.mask("Please repeat your password.".cyan.bold, required: true)
 end
+def get_email
+    $prompt.ask('What is your email?') { |q| q.validate :email }
+end
 
 def list_browse_purchase
     Item.generate_list
@@ -112,7 +115,6 @@ def list_browse_purchase
         pr = marketplace_navigation
         if pr == "Purchase Item"
             $current_user.purchase
-            puts "Thank you for your purchase!"
             list_browse_purchase
         elsif pr == "Refresh Marketplace"
             puts "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++".red.bold
@@ -134,7 +136,6 @@ def list_browse_purchase
         end 
     elsif decision == "Purchase Item"
         $current_user.purchase
-        puts "Thank you for your purchase!"
         list_browse_purchase
     elsif decision == "Change Item Price"
         $current_user.change_item_price
@@ -217,6 +218,7 @@ def new_user
     User.credential_hash
 
     first_last = get_name
+    in_email = get_email
     loc = get_loc
     
     until $cred_hash.keys.include?(uname) == false && uname != nil do
@@ -232,9 +234,9 @@ def new_user
         if pass != pass2
             puts "Passwords do not match."
         elsif pass == pass2
-            User.create(name: first_last, location: loc, username:uname, password: pass)
+            User.create(name: first_last, location: loc, username:uname, password: pass, email: in_email )
             puts "Thank you for creating a new account! Please use your new credentials to log in.".light_green.bold
-            login
+            authenticate_or_create
             pass_attempt = 3
         end
     pass_attempt +=1

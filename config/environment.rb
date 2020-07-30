@@ -1,6 +1,7 @@
 require "bundler/setup"
 require "sinatra/activerecord"
 require "tty-prompt"
+require "date"
 
 
 Bundler.require

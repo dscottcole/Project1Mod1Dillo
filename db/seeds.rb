@@ -1,7 +1,7 @@
-scott = User.create(name: "Scott Cole", location: "Houston", username: "scotty", password: "123", balance: 4000)
-ted = User.create(name: "Ted Neben", location: "Houston", username: "teddy", password: "456", balance: 2000)
-bobby = User.create(name: "Robert Tarantino", location: "Dallas", username: "logic", password: "789", balance: 263.37)
-marshall = User.create(name: "Marshall Mathers", location: "Austin", username: "eminem", password: "012", balance: 39.99)
+scott = User.create(name: "Scott Cole", location: "Houston", username: "scotty", password: "cole1", balance: 4000, email: "scotty1@gmail.com")
+ted = User.create(name: "Ted Neben", location: "Houston", username: "teddy", password: "456", balance: 2000, email: "teddy1@gmail.com")
+bobby = User.create(name: "Robert Tarantino", location: "Dallas", username: "logic", password: "789", balance: 263.37, email: "bobby1@hotmail.com")
+marshall = User.create(name: "Marshall Mathers", location: "Austin", username: "eminem", password: "012", balance: 39.99, email: "eminem1@yahoo.com")
 # = User.create(name: "")
 
 bike = Item.create(item_name: "Santa Cruz Bronson", user_id: 1, order_id: 1, location: "Houston", category: "Bicycles", condition: "New", price: 4000, description: "Super gnarly 2020 Bronson. Shreds anything!")
@@ -15,8 +15,8 @@ headset = Item.create(item_name: "Hyper X Cloud", user_id: 2,location: "Houston"
 bell = Item.create(item_name: "Bike Bell", user_id: 1, location: "Houston", category: "Bicycles", condition: "Used_not_great", price: 10.00, description: "Stainless Steel Desk Bell fashioned for a bike... Ding in style")
 # = Item.create(item_name: "", user_id:,  location: "", category: "", condition: "", price: , description: "")
 
-o1 = Order.create(seller: 1, buyer: 2, item_id: 1, order_type: "Local", shipping?: false, shipping_address: nil, meeting_location: "123 Fake Street. Houston, TX 77777")
-o2 = Order.create(seller: 2, buyer: 1, item_id: 2, order_type: "Local", shipping?: false, shipping_address: nil, meeting_location: "456 Made-up Street. Houston, TX 77777")
+o1 = Order.create(seller: 1, buyer: 2, item_id: 1, order_type: "Local", shipping?: false, shipping_address: nil, meeting_location: "123 Fake Street. Houston, TX 77777", date_time: "2020-07-27 16:00:00 -0500")
+o2 = Order.create(seller: 2, buyer: 1, item_id: 2, order_type: "Local", shipping?: false, shipping_address: nil, meeting_location: "456 Made-up Street. Houston, TX 77777", date_time: "2020-07-28 18:00:00 -0500")
 o3 = Order.create(seller: 3, buyer: 1, item_id: 3, order_type: "Shipment", shipping?: true, shipping_address: "Scott's House, Houston, TX 77777", meeting_location: nil)
 o4 = Order.create(seller: 3, buyer: 2, item_id: 4, order_type: "Shipment", shipping?: true, shipping_address: "Ted's, Houston, TX 77777", meeting_location: nil)
 o5 = Order.create(seller: 4, buyer: 3, item_id: 5, order_type: "Shipment", shipping?: true, shipping_address: "Bobby's House, Houston, TX 77777", meeting_location: nil)
