@@ -68,7 +68,6 @@ class User < ActiveRecord::Base
     end
 
     def purchase
-        # binding.pry
         a = $available_items.map {|i| i.user_id}
         b = a.find_all {|i| i == self.id}
 
@@ -94,7 +93,6 @@ class User < ActiveRecord::Base
             address = get_m_address
             order_t = "Local"
             datime = get_date_time
-binding.pry
             until datime >= Date.today + 1 == true do
                 puts "The date entered is not after #{Date.today}. Please revise.".white.bold
                 datime = get_date_time
@@ -134,9 +132,9 @@ binding.pry
         a = $available_items.map {|i| i.user_id}
        
         if  a.any?(self.id) == false
-            puts "===================================================".red.bold
+            puts "=====================================================".red.bold
             puts "You do not own any of the items in the marketplace.".white.bold
-            puts "===================================================".blue.bold
+            puts "=====================================================".blue.bold
             marketplace_menu
         else
             self.get_user_items
@@ -205,6 +203,30 @@ binding.pry
                     sleep 0.75
                 end
             end
+        end
+    end
+
+    def listed_items
+        Item.generate_list
+        a = $available_items.find_all {|i| i.user_id == self.id}
+        if a.any? == true
+            a.each do |i|
+            puts "================================================================================".red.bold
+            puts "Item Name".light_yellow.bold
+            puts i.item_name
+            puts "Category".light_yellow.bold
+            puts i.category
+            puts "Condition".light_yellow.bold
+            puts i.condition
+            puts "Price".light_yellow.bold
+            puts i.price
+            puts "Description".light_yellow.bold
+            puts i.description
+            puts "================================================================================".blue.bold
+            sleep 0.75
+            end
+        elsif a.any == false
+            puts "You have no items listed in the marketplace".white.bold
         end
     end
 

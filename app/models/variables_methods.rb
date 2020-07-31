@@ -6,11 +6,11 @@ bobby = User.all[2]
 marshall = User.all[3]
 $prompt = TTY::Prompt.new
 $current_user = nil
-$choice_array = ["List Item", "Browse", "Purchase Item", "Change Item Price", "Order History", "Log Out"]
-$choice_array2 = ["Purchase Item", "Refresh Marketplace", "List Item", "Change Item Price", "Order History", "Log Out"]
-$log_new_browse = ["Log In", "Create New Account", "Browse Without Logging In"]
+$choice_array = ["List Item", "Browse", "Purchase Item", "View My Listed Items", "Change Item Price", "Order History", "Log Out"]
+$choice_array2 = ["Purchase Item", "Refresh Marketplace", "List Item", "View My Listed Items", "Change Item Price", "Order History", "Log Out"]
+$log_new_browse = ["Log In", "Create New Account", "Browse Without Logging In", "Exit Markeplace"]
 $cond = ["New", "Used Like New", "Used Fair", "Used Not Great"]
-$cat = ["Active", "Gaming", "Clothing", "Furniture", "Computers", "Household", "Hardware Auto"]
+$cat = ["Active", "Gaming", "Clothing", "Furniture", "Computers", "Household", "Hardware", "Auto"]
 $salesvpurch = ["Sales", "Purchases"]
 
 
@@ -50,11 +50,11 @@ puts "
                                                       ████                        ██░░░░░░░░░░██████           
                                                                                 ██░░██████████                 
                                                                               ██████                  
-    88 88                          
-    d                                   88 88                        
+    8888                          
+    dd                                  88 88                        
     88                                  88                             
-MMMM88MMM 8b dPPYba adPPYYba     adPPYb 88 88 8b dPPYba     adPPYbd8  
-    88    88P      Y8       Y8 a8      Y88 88 88P      8a a8      Y88  
+MMMM88MMM 8b dPPYba  adPPYYba    adPPYb 88 88 8b dPPYba     adPPYbd8  
+    88    88P       Y8      Y8 a8      Y88 88 88P      8a a8      Y88  
     88    88         adPPPPP88 8b       88 88 88       88 8b       88  
     88    88        88      88  8a     d88 88 88       88  8a     d88  
      Y888 88          8bbdPY8     8bbdPY8  88 88       88     YbbdPY8  
@@ -134,6 +134,9 @@ def marketplace_menu
         elsif pr == "List Item"
             $current_user.list
             marketplace_menu
+        elsif pr == "View My Listed Items"
+            $current_user.listed_items
+            marketplace_menu
         elsif pr == "Change Item Price"
             $current_user.change_item_price
             marketplace_menu
@@ -150,6 +153,9 @@ def marketplace_menu
         end 
     elsif decision == "Purchase Item"
         $current_user.purchase
+        marketplace_menu
+    elsif decision == "View My Listed Items"
+        $current_user.listed_items
         marketplace_menu
     elsif decision == "Change Item Price"
         $current_user.change_item_price
@@ -170,13 +176,13 @@ end
 def show_marketplace
     system "clear"
     puts " "
-    puts "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++".red.bold
-    puts "                  Available Marketplace Items:                  ".white.bold
-    puts "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++".blue.bold
+    puts "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++".red.bold
+    puts "                           Available Marketplace Items:                         ".white.bold
+    puts "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++".blue.bold
     Item.generate_list
     if $available_items.any? == true
         $available_items.each do |i|
-            puts "============================================================".red.bold
+            puts "================================================================================".red.bold
             puts "Item Name:".light_yellow.bold
             puts i.item_name
             puts "Category:".light_yellow.bold
@@ -189,7 +195,7 @@ def show_marketplace
             puts i.description
             puts "Item Location:".light_yellow.bold
             puts i.location
-            puts "============================================================".blue.bold
+            puts "================================================================================".blue.bold
             sleep 0.75
         end
     elsif $available_items.any? == false
@@ -210,9 +216,9 @@ def login
             puts "Username incorrect".red.bold
         elsif $cred_hash.values.include?(credentials) == true
             system "clear"
-            puts "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++".red.bold
+            puts "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++".red.bold
             puts "Thanks for visiting the Armadillo Trading Post, #{username}!!".white.bold
-            puts "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++".blue.bold
+            puts "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++".blue.bold
             $current_user = User.all.find_by(username: username)
             attempts = 3
         elsif $cred_hash.values.include?(credentials) == false
@@ -271,7 +277,6 @@ def new_user
         end
         if pass_attempt == 3  
             puts "You have exceeded your account creation attempts.".red.underline + " " + "Happy trails!".light_yellow.bold
-            binding.pry
             exit
         end
     end
@@ -286,6 +291,8 @@ def authenticate_or_create_or_browse
     elsif choice == "Browse Without Logging In"
         show_marketplace
         authenticate_or_create_or_browse
+    elsif choice == "Exit Markeplace"
+        exit
     end
 end
 
