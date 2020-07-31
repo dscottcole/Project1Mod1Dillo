@@ -207,11 +207,15 @@ class User < ActiveRecord::Base
     end
 
     def listed_items
+        system "clear"
+        puts "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++".red.bold
+        puts "                             Your Listed Items                                ".white.bold
+        puts "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++".blue.bold
         Item.generate_list
         a = $available_items.find_all {|i| i.user_id == self.id}
         if a.any? == true
             a.each do |i|
-            puts "================================================================================".red.bold
+            puts "=========================================================================".red.bold
             puts "Item Name".light_yellow.bold
             puts i.item_name
             puts "Category".light_yellow.bold
@@ -222,7 +226,7 @@ class User < ActiveRecord::Base
             puts i.price
             puts "Description".light_yellow.bold
             puts i.description
-            puts "================================================================================".blue.bold
+            puts "=========================================================================".blue.bold
             sleep 0.75
             end
         elsif a.any == false
