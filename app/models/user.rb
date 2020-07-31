@@ -233,5 +233,4 @@ class User < ActiveRecord::Base
             puts "You have no items listed in the marketplace".white.bold
         end
     end
-
 end
