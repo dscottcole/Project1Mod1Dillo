@@ -229,7 +229,7 @@ class User < ActiveRecord::Base
             puts "=========================================================================".blue.bold
             sleep 0.75
             end
-        elsif a.any == false
+        elsif a.any? == false
             puts "You have no items listed in the marketplace".white.bold
         end
     end
