@@ -79,12 +79,14 @@ class User < ActiveRecord::Base
         end
         
         item_selection = get_item.item_name
-        item = Item.all.find_by(item_name: item_selection)
+        binding.pry
+        item = $available_items.find {|i| i.item_name == item_selection}
+        # item = Item.all.find_by(item_name: item_selection)
 
         until self.id != item.user_id do
             puts "You cannot purchase your own item.".red.bold
             item_selection = get_item.item_name
-            item = Item.all.find_by(item_name: item_selection)
+            item = $available_items.find {|i| i.item_name == item_selection}
         end        
 
         ship_vs_local = shipvlocal
