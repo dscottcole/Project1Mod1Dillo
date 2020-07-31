@@ -79,7 +79,6 @@ class User < ActiveRecord::Base
         end
         
         item_selection = get_item.item_name
-        binding.pry
         item = $available_items.find {|i| i.item_name == item_selection}
         # item = Item.all.find_by(item_name: item_selection)
 
