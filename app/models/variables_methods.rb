@@ -224,6 +224,7 @@ def login
         end
         if attempts == 3 
             puts "You have exceeded your login attempts.".red.underline + " " + "Happy trails!".light_yellow.bold
+            exit
         end
     end 
 end
