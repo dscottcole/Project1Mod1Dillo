@@ -183,7 +183,7 @@ def show_marketplace
     if $available_items.any? == true
         $available_items.each do |i|
             puts "================================================================================".red.bold
-            puts "Item Name:".light_yellow.bold
+            puts "Item Name".light_yellow.bold
             puts i.item_name
             puts "Category:".light_yellow.bold
             puts i.category
@@ -195,6 +195,8 @@ def show_marketplace
             puts i.description
             puts "Item Location:".light_yellow.bold
             puts i.location
+            puts "Item Seller:".light_yellow.bold
+            puts i.user.name
             puts "================================================================================".blue.bold
             sleep 0.75
         end
