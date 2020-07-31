@@ -90,7 +90,7 @@ def marketplace_secondary_nav
     $prompt.select("Select from the following:".light_yellow.bold, $choice_array2, required: true)
 end
 def get_name
-    $prompt.ask("Please enter your first and last. (examples: John Doe, Jane Doe)".light_yellow.bold, required: true)
+    $prompt.ask("Please enter your first and last name. (examples: John Doe, Jane Doe)".light_yellow.bold, required: true)
 end
 def get_loc
     $prompt.select("Where are you located?".light_yellow.bold, %w(Houston Austin Dallas), required: true)
